@@ -1,4 +1,4 @@
-module github.com/flores666/profileshare-lib
+module profileshare-lib
 
 go 1.25
 
