@@ -9,11 +9,10 @@ import (
 )
 
 type Config struct {
-	Env              string     `yaml:"env" env-required:"true"`
-	ConnectionString string     `yaml:"db_connection_string" env-required:"true"`
-	HttpServer       HttpServer `yaml:"http_server" env-required:"true"`
-	Producer         Producer   `yaml:"producer"`
-	Consumer         Consumer   `yaml:"consumer"`
+	Env        string     `yaml:"env" env-required:"true"`
+	HttpServer HttpServer `yaml:"http_server" env-required:"true"`
+	Producer   Producer   `yaml:"producer"`
+	Consumer   Consumer   `yaml:"consumer"`
 }
 
 type HttpServer struct {
