@@ -7,13 +7,6 @@ type ValidationError struct {
 
 type ValidationErrors struct {
 	Validations []ValidationError `json:"validations,omitempty"`
-	Message     string            `json:"message,omitempty"`
-}
-
-func NewValidationErrors(message string) *ValidationErrors {
-	return &ValidationErrors{
-		Message: message,
-	}
 }
 
 func (e *ValidationErrors) Add(field, message string) {
