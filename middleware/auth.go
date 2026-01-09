@@ -11,6 +11,7 @@ import (
 // AuthMiddleware returns a middleware that checks for a valid JWT in the
 // "Authorization" header (format: "Bearer <token>").
 // The `secret` parameter is the HMAC key used to verify the token's signature.
+// Saves user id in context in `user_id` param
 func AuthMiddleware(secret []byte) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
