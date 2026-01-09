@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"context"
 	"net/http"
 	"strings"
 
@@ -28,20 +29,32 @@ func AuthMiddleware(secret []byte) func(http.Handler) http.Handler {
 
 			tokenStr := parts[1]
 
-			_, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+			token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 					return nil, jwt.ErrSignatureInvalid
 				}
-
 				return secret, nil
 			})
 
-			if err != nil {
+			if err != nil || !token.Valid {
 				http.Error(w, "invalid or expired token", http.StatusUnauthorized)
 				return
 			}
 
-			next.ServeHTTP(w, r)
+			claims, ok := token.Claims.(jwt.MapClaims)
+			if !ok {
+				http.Error(w, "invalid token claims", http.StatusUnauthorized)
+				return
+			}
+
+			userID, ok := claims["user_id"].(string)
+			if !ok {
+				http.Error(w, "user_id not found in token", http.StatusUnauthorized)
+				return
+			}
+
+			ctx := context.WithValue(r.Context(), "user_id", userID)
+			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
 }
